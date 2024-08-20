@@ -1,32 +1,34 @@
 async function addToDo() {
     const description = document.getElementById('todo-input').value;
-    await fetch('/todos', {
+   let resp= await fetch('http://localhost:9999/todos/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description })
+        body: JSON.stringify({description})
     });
+   // console.log(resp);
     loadToDos();
 }
 
 async function loadToDos() {
-    const response = await fetch('/todos');
-    const todos = await response.json();
-    // Render todos in the list
-}
+    try {
+        const response = await fetch('http://localhost:9999/todos/get');
+        const todos = await response.json();
 
-async function markAsComplete(id) {
-    await fetch(`/todos/${id}?status=true`, { method: 'PUT' });
-    loadToDos();
-}
+        // Render todos in the list
+        let list = document.getElementById('todo-list');
+        list.innerHTML = "";
 
-
-function renderToDos(todos) {
-    const list = document.getElementById('todo-list');
-    list.innerHTML = ''; // Clear previous list
-    todos.forEach(todo => {
-        const listItem = document.createElement('li');
-        listItem.innerHTML = `<span>${todo.description}</span>
-                             <input type="checkbox" onchange="markAsComplete(${todo.id})" ${todo.status ? 'checked' : ''} />`;
-        list.appendChild(listItem);
-    });
+        todos.forEach(todo => {
+            list.innerHTML += `
+            <tr>
+                <td>${todo.description}</td>
+                <td>
+                    <input type="checkbox" onclick="markAsComplete(${todo.id})" id="${todo.id}" ${todo.status ? 'checked' : ''}/>
+                </td>
+            </tr>
+            `;
+        });
+    } catch (error) {
+        console.error('Error loading todos:', error);
+    }
 }
