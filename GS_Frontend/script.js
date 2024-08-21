@@ -20,10 +20,10 @@ async function loadToDos() {
 
         todos.forEach(todo => {
             list.innerHTML += `
-            <tr>
+            <tr class="${todo.status ? 'comp': 'in'}">
                 <td>${todo.description}</td>
                 <td>
-                    <input type="checkbox" onclick="markAsComplete(${todo.id})" id="${todo.id}" ${todo.status ? 'checked' : ''}/>
+                    <input type="checkbox" onclick="markAsComplete(${todo.id})" id="${todo.id}" ${todo.status ? 'checked  disabled' : ''}  /> ${todo.status ? "Completed" : "Mark as Completed"}
                 </td>
             </tr>
             `;
@@ -32,3 +32,24 @@ async function loadToDos() {
         console.error('Error loading todos:', error);
     }
 }
+
+
+async function markAsComplete(id) {
+    await fetch(`http://localhost:9999/todos/change/${id}?status=true`, { method: 'PUT' });
+    loadToDos();
+}
+
+
+function renderToDos(todos) {
+    const list = document.getElementById('todo-list');
+    list.innerHTML = ''; // Clear previous list
+    todos.forEach(todo => {
+      list.innerHTML+=`<tr>
+    <td>${todo.description}</td>
+    <td>${todo.id}</td>
+    <div>Spec</div>
+    </tr>`
+    });
+}
+
+loadToDos()
