@@ -23,7 +23,7 @@ async function loadToDos() {
             <tr class="${todo.status ? 'comp': 'in'}">
                 <td>${todo.description}</td>
                 <td>
-                    <input type="checkbox" onclick="markAsComplete(${todo.id})" id="${todo.id}" ${todo.status ? 'checked  disabled' : ''}  /> ${todo.status ? "Completed" : "Mark as Completed"}
+                    <input type="checkbox" onclick="markAsComplete(${todo.id})" id="${todo.id}" ${todo.status ? 'checked  disabled' : ''}  /> ${todo.status ? "Completed" : "Mark as Complete"}
                 </td>
             </tr>
             `;
